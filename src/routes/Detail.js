@@ -7,6 +7,7 @@ function DetailPage(props) {
   return (
     <div className="container">
       <div className="row">
+        f
         <div className="col-md-6">
           <img
             src={`https://codingapple1.github.io/shop/shoes${imgId}.jpg`}
