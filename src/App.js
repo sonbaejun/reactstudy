@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { createContext, useState } from "react";
 import "./App.css";
 import {
   Button,
@@ -12,9 +12,13 @@ import {
 import data from "./data.js";
 import DetailPage from "./routes/Detail.js";
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
+import axios from "axios";
+
+export let Context1 = createContext();
 
 function App() {
   let [shoes, setShoes] = useState(data);
+  let [ea] = useState([10, 11, 12]);
   let navigate = useNavigate();
 
   function sortItem() {
@@ -23,6 +27,24 @@ function App() {
       return a.price - b.price;
     });
     setShoes(copyShoes);
+  }
+
+  function moreBtn() {
+    console.log(shoes.length);
+    let num1 = shoes.length;
+    let urlNum = num1 / 3 + 1;
+    axios
+      .get(`https://codingapple1.github.io/shop/data${urlNum}.json`)
+      .then((data) => {
+        let copyShoes = [...shoes];
+        data.data.map((e) => {
+          copyShoes.push(e);
+        });
+        setShoes(copyShoes);
+      })
+      .catch(() => {
+        alert("더 이상 상품이 없어요");
+      });
   }
 
   return (
@@ -62,7 +84,6 @@ function App() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-
       <Routes>
         <Route
           path="/"
@@ -71,16 +92,30 @@ function App() {
               <div className="main-bg"></div>
               <button onClick={() => sortItem()}>상품정렬기능</button>
               <div>
-                <Row>
+                <Row md={3}>
                   {shoes.map((e, index) => {
                     return <Product shoes={e} index={index} />;
                   })}
                 </Row>
               </div>
+              <button
+                onClick={() => {
+                  moreBtn();
+                }}
+              >
+                더보기 버튼
+              </button>
             </>
           }
         />
-        <Route path="/detail/:id" element={<DetailPage shoes={shoes} />} />
+        <Route
+          path="/detail/:id"
+          element={
+            <Context1.Provider value={{ ea }}>
+              <DetailPage shoes={shoes} />
+            </Context1.Provider>
+          }
+        />
         <Route path="/about" element={<About />}>
           <Route path="member" element={<div>멤버임</div>}></Route>
           <Route path="location" element={<About />}></Route>
