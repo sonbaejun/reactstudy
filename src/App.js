@@ -8,8 +8,10 @@ import {
   NavDropdown,
   Row,
   Col,
+  Table,
 } from "react-bootstrap";
 import data from "./data.js";
+import Cart from "./routes/Cart.js";
 import DetailPage from "./routes/Detail.js";
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 import axios from "axios";
@@ -91,6 +93,13 @@ function App() {
             <>
               <div className="main-bg"></div>
               <button onClick={() => sortItem()}>상품정렬기능</button>
+              <button
+                onClick={() => {
+                  navigate("/cart");
+                }}
+              >
+                장바구니
+              </button>
               <div>
                 <Row md={3}>
                   {shoes.map((e, index) => {
@@ -128,6 +137,7 @@ function App() {
           <Route path="two" element={<div>생일기념 쿠폰받기</div>}></Route>
         </Route>
         <Route path="*" element={<div>404pages</div>}></Route>
+        <Route path="/cart" element={<Cart></Cart>}></Route>
       </Routes>
     </div>
   );

@@ -2,7 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Nav, Tab } from "react-bootstrap";
-
+import { useDispatch, useSelector } from "react-redux";
+import { changeBasket } from "../store/userBasket.js";
 import { Context1 } from "./../App.js";
 
 let YellowBtn = styled.button`
@@ -20,6 +21,8 @@ function DetailPage(props) {
   let [count, setCount] = useState(1);
   let [inputNum, setInputNum] = useState("");
   let [tab, setTab] = useState(0);
+  let userBasket = useSelector((state) => state.userBasket);
+  let dispatch = useDispatch();
 
   let { ea } = useContext(Context1);
   console.log(ea);
@@ -48,6 +51,9 @@ function DetailPage(props) {
   let imgId = Number(id) + 1;
   return (
     <div className="container">
+      {userBasket.map((e) => {
+        return <div>{e.id}</div>;
+      })}
       <div className="row">
         <BlackBox>
           {count}
@@ -68,7 +74,14 @@ function DetailPage(props) {
           <h4 className="pt-5">{props.shoes[index].title}</h4>
           <p>{props.shoes[index].content}</p>
           <p>{props.shoes[index].price}</p>
-          <button className="btn btn-danger">주문하기</button>
+          <button
+            className="btn btn-danger"
+            onClick={() => {
+              dispatch(changeBasket(props.shoes[index]));
+            }}
+          >
+            주문하기
+          </button>
         </div>
         {/* <input
           value={inputNum}
