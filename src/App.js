@@ -13,8 +13,17 @@ import {
 import data from "./data.js";
 import Cart from "./routes/Cart.js";
 import DetailPage from "./routes/Detail.js";
-import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+  Outlet,
+  json,
+} from "react-router-dom";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
 
 export let Context1 = createContext();
 
@@ -22,6 +31,7 @@ function App() {
   let [shoes, setShoes] = useState(data);
   let [ea] = useState([10, 11, 12]);
   let navigate = useNavigate();
+  let watchedArray = JSON.parse(localStorage.getItem("watched"));
 
   function sortItem() {
     let copyShoes = [...shoes];
@@ -91,6 +101,23 @@ function App() {
           path="/"
           element={
             <>
+              <div>
+                <h4>최근 본 상품</h4>
+                {watchedArray.map((e, index) => {
+                  let idx = shoes.findIndex((ele) => ele.id == e);
+                  return (
+                    <img
+                      src={`https://codingapple1.github.io/shop/shoes${
+                        idx + 1
+                      }.jpg`}
+                      width="20%"
+                      onClick={() => {
+                        navigate(`/detail/${idx}`);
+                      }}
+                    />
+                  );
+                })}
+              </div>
               <div className="main-bg"></div>
               <button onClick={() => sortItem()}>상품정렬기능</button>
               <button

@@ -25,12 +25,27 @@ function DetailPage(props) {
   let dispatch = useDispatch();
 
   let { ea } = useContext(Context1);
-  console.log(ea);
   useEffect(() => {
     //mount, update 시 실행 코드
   });
   useEffect(() => {
     //mount 시 실행 코드
+    let a = localStorage.getItem("watched");
+    let productId = props.shoes[index].id;
+    if (a == null) {
+      localStorage.setItem("watched", JSON.stringify([productId]));
+    } else {
+      let watchedArray = JSON.parse(localStorage.getItem("watched"));
+      let arrIndex = watchedArray.indexOf(productId);
+      if (arrIndex == -1) {
+        watchedArray.splice(0, 0, productId);
+        localStorage.setItem("watched", JSON.stringify(watchedArray));
+      } else {
+        watchedArray.splice(arrIndex, 1);
+        watchedArray.splice(0, 0, productId);
+        localStorage.setItem("watched", JSON.stringify(watchedArray));
+      }
+    }
   }, []); // [] ==> 디펜던시
   useEffect(() => {
     return () => {
@@ -129,7 +144,6 @@ function DetailPage(props) {
 }
 
 function TabContent(props) {
-  console.log(props);
   if (props.tab == 0) {
     return <div>{props.shoes.title}</div>;
   } else if (props.tab == 1) {
